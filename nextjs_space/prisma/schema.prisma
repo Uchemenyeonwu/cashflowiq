@@ -68,6 +68,7 @@ model User {
   teamMemberships      TeamMember[]
   ownedTeams           Team[]
   apiKeys              ApiKey[]
+  webhooks             Webhook[]
   reportExports        ReportExport[]
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
@@ -301,11 +302,47 @@ model ApiKey {
   expiresAt          DateTime?
   isActive           Boolean   @default(true)
   rateLimit          Int       @default(1000) // requests per hour
+  requestCount       Int       @default(0) // total requests made with this key
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 
   @@index([userId])
   @@index([keyHash])
+}
+
+model Webhook {
+  id                 String    @id @default(cuid())
+  userId             String
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  url                String
+  events             String[]  // e.g., ["transaction.created", "forecast.updated"]
+  secret             String    // for HMAC signature verification
+  description        String?   @db.Text
+  isActive           Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deliveries         WebhookDelivery[]
+
+  @@index([userId])
+  @@index([url])
+}
+
+model WebhookDelivery {
+  id                 String    @id @default(cuid())
+  webhookId          String
+  webhook            Webhook   @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  eventType          String    // e.g., "transaction.created"
+  payload            String    @db.Text
+  statusCode         Int?
+  success            Boolean   @default(false)
+  attempt            Int       @default(1)
+  nextRetryAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([webhookId])
+  @@index([eventType])
+  @@index([createdAt])
 }
 
 // ===== PHASE 4: Audit Logging & Shared Dashboards =====

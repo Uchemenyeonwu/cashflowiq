@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SettingsForm from "./_components/settings-form";
 import { SubscriptionCard } from "./_components/subscription-card";
+import { ApiStatusCard } from "./_components/api-status-card";
 import { ConnectBank } from "@/components/connect-bank";
 import { LinkedAccountsList } from "@/components/linked-accounts-list";
 
@@ -80,6 +81,11 @@ export default async function SettingsPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Public API */}
+        <div className="lg:col-span-3">
+          <ApiStatusCard />
+        </div>
 
         {/* Other Integrations */}
         <Card className="lg:col-span-3">
