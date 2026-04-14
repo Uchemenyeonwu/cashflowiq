@@ -65,6 +65,10 @@ model User {
   forecasts            Forecast[]
   linkedAccounts       LinkedAccount[]
   stripeCustomer       StripeCustomer?
+  teamMemberships      TeamMember[]
+  ownedTeams           Team[]
+  apiKeys              ApiKey[]
+  reportExports        ReportExport[]
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 
@@ -156,6 +160,12 @@ model Forecast {
   date               DateTime
   projectedCashFlow  Decimal  @db.Decimal(12, 2)
   confidence         Int?
+  // Advanced forecasting fields (Phase 3)
+  seasonalityFactor  Decimal? @db.Decimal(5, 4) // e.g., 1.2 = 20% above baseline
+  trendFactor        Decimal? @db.Decimal(5, 4)
+  anomalyScore       Decimal? @db.Decimal(5, 4) // 0-1: probability of anomaly
+  isAnomaly          Boolean  @default(false)
+  forecastMethod     String   @default("linear") // "linear", "arima", "neural_net"
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -197,4 +207,142 @@ model SyncCursor {
 
   @@unique([linkedAccountId])
   @@index([linkedAccountId])
+}
+
+// ===== PHASE 3: Multi-account, Team, API, Report Export =====
+
+model ReportExport {
+  id                 String    @id @default(cuid())
+  userId             String
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamId             String?
+  team               Team?     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  reportType         String    // "cash_flow", "category_breakdown", "monthly_comparison", "full_report"
+  fileFormat         String    // "pdf", "xlsx"
+  fileName           String
+  filePath           String?   @db.Text // cloud storage path
+  fileSize           Int?      // in bytes
+  dateRangeStart     DateTime?
+  dateRangeEnd       DateTime?
+  status             String    @default("pending") // "pending", "generating", "completed", "failed"
+  errorMessage       String?   @db.Text
+  createdAt          DateTime  @default(now())
+  completedAt        DateTime?
+  expiresAt          DateTime? // auto-delete after 30 days
+  updatedAt          DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([teamId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Team {
+  id                 String    @id @default(cuid())
+  name               String
+  ownerId            String    // Primary user who owns/created the team
+  owner              User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  slug               String    @unique
+  description        String?   @db.Text
+  maxMembers         Int       @default(5) // limited by subscription tier
+  members            TeamMember[]
+  invitations        TeamInvitation[]
+  sharedDashboards   SharedDashboard[]
+  reportExports      ReportExport[]
+  auditLogs          AuditLog[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([ownerId])
+  @@index([slug])
+}
+
+model TeamMember {
+  id                 String    @id @default(cuid())
+  teamId             String
+  team               Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId             String
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role               String    @default("member") // "owner", "manager", "member", "viewer" (Phase 4)
+  joinedAt           DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@unique([teamId, userId])
+  @@index([teamId])
+  @@index([userId])
+}
+
+model TeamInvitation {
+  id                 String    @id @default(cuid())
+  teamId             String
+  team               Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  email              String
+  role               String    @default("member") // default role for invited user
+  invitedBy          String    // userId of person who sent invite
+  status             String    @default("pending") // "pending", "accepted", "rejected"
+  expiresAt          DateTime
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@unique([teamId, email])
+  @@index([teamId])
+  @@index([email])
+  @@index([status])
+}
+
+model ApiKey {
+  id                 String    @id @default(cuid())
+  userId             String
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  keyHash            String    @unique // hashed version of actual key
+  name               String
+  description        String?   @db.Text
+  lastUsedAt         DateTime?
+  expiresAt          DateTime?
+  isActive           Boolean   @default(true)
+  rateLimit          Int       @default(1000) // requests per hour
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([keyHash])
+}
+
+// ===== PHASE 4: Audit Logging & Shared Dashboards =====
+
+model AuditLog {
+  id                 String    @id @default(cuid())
+  teamId             String
+  team               Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId             String    // Who made the change
+  action             String    // "create", "update", "delete", "export", "invite"
+  entityType         String    // "transaction", "forecast", "user", "team", etc
+  entityId           String?
+  changes            String?   @db.Text // JSON of before/after values
+  ipAddress          String?
+  userAgent          String?   @db.Text
+  createdAt          DateTime  @default(now())
+
+  @@index([teamId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model SharedDashboard {
+  id                 String    @id @default(cuid())
+  teamId             String
+  team               Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  name               String
+  description        String?   @db.Text
+  isPublic           Boolean   @default(false)
+  shareToken         String?   @unique // for public sharing
+  widgets            String?   @db.Text // JSON array of widget configs
+  layout             String?   @db.Text // JSON of grid layout
+  createdBy          String
+  updatedAt          DateTime  @updatedAt
+  createdAt          DateTime  @default(now())
+
+  @@index([teamId])
+  @@index([shareToken])
 }
