@@ -2,9 +2,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LogOut, BarChart3, TrendingUp, Settings, Home, LineChart } from "lucide-react";
+import { LogOut, BarChart3, TrendingUp, Settings, Home, LineChart, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LogoutButton from "./_components/logout-button";
+import { SageFloatingWidget } from "@/components/sage-floating-widget";
 
 export default async function AppLayout({
   children,
@@ -62,6 +63,15 @@ export default async function AppLayout({
               Analytics
             </Button>
           </Link>
+          <Link href="/support">
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+            >
+              <HelpCircle className="w-5 h-5 mr-3" />
+              Support
+            </Button>
+          </Link>
           <Link href="/settings">
             <Button
               variant="ghost"
@@ -86,6 +96,9 @@ export default async function AppLayout({
       <main className="flex-1 overflow-auto">
         {children}
       </main>
+
+      {/* Sage Floating Widget */}
+      <SageFloatingWidget />
     </div>
   );
 }
