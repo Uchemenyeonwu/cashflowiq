@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import { syncPlaidTransactions } from '@/lib/plaid-sync';
+import { enqueueSyncJob } from '@/lib/queue';
 
 export async function POST(req: NextRequest) {
   try {
@@ -50,20 +50,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Trigger sync
-    await syncPlaidTransactions(linkedAccountId);
-
-    const updated = await prisma.linkedAccount.findUnique({
-      where: { id: linkedAccountId },
-    });
-
-    return NextResponse.json({
-      success: true,
-      syncStatus: updated?.syncStatus,
-      lastSyncedAt: updated?.lastSyncedAt,
-    });
+    // Enqueue the sync job
+    try {
+      await enqueueSyncJob(linkedAccountId);
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Sync job enqueued',
+        linkedAccountId,
+      });
+    } catch (error: any) {
+      console.error('Failed to enqueue sync job:', error);
+      return NextResponse.json(
+        { error: error.message || 'Failed to start sync' },
+        { status: 500 }
+      );
+    }
   } catch (error: any) {
-    console.error('Error syncing linked account:', error);
+    console.error('Error in sync endpoint:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to sync account' },
       { status: 500 }

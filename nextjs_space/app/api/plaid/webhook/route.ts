@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { syncPlaidTransactions } from '@/lib/plaid-sync';
+import { enqueueSyncJob } from '@/lib/queue';
 import { prisma } from '@/lib/db';
 
 interface PlaidWebhookPayload {
@@ -28,10 +28,13 @@ export async function POST(req: NextRequest) {
     switch (payload.webhook_type) {
       case 'TRANSACTIONS':
         if (payload.webhook_code === 'SYNC_UPDATES_AVAILABLE') {
-          // Queue the sync job
-          console.log('Queueing sync for account:', linkedAccount.id);
-          // For now, we'll sync immediately. Later, we'll use BullMQ for background jobs
-          await syncPlaidTransactions(linkedAccount.id);
+          // Enqueue the sync job for background processing
+          console.log('Enqueuing sync for account:', linkedAccount.id);
+          try {
+            await enqueueSyncJob(linkedAccount.id);
+          } catch (error) {
+            console.error('Failed to enqueue sync job:', error);
+          }
         }
         break;
       case 'ITEM':
