@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SettingsForm from "./_components/settings-form";
+import { SubscriptionCard } from "./_components/subscription-card";
 import { ConnectBank } from "@/components/connect-bank";
 import { LinkedAccountsList } from "@/components/linked-accounts-list";
 
@@ -22,7 +23,16 @@ export default async function SettingsPage() {
 
   const stripeCustomer = await prisma.stripeCustomer.findUnique({
     where: { userId },
+    include: {
+      subscriptions: {
+        where: { status: { in: ['active', 'past_due'] } },
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+      },
+    },
   });
+
+  const activeSubscription = stripeCustomer?.subscriptions?.[0];
 
   return (
     <div className="p-8">
@@ -45,42 +55,11 @@ export default async function SettingsPage() {
         </Card>
 
         {/* Subscription */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Subscription</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <p className="text-sm text-gray-600">Current Plan</p>
-              <p className="text-lg font-semibold text-gray-900 capitalize">
-                {user?.subscriptionTier || "Free"}
-              </p>
-            </div>
-
-            {stripeCustomer?.renewalDate && (
-              <div>
-                <p className="text-sm text-gray-600">Next Billing Date</p>
-                <p className="text-lg font-semibold text-gray-900">
-                  {new Date(stripeCustomer.renewalDate).toLocaleDateString()}
-                </p>
-              </div>
-            )}
-
-            <button className="w-full border border-gray-300 rounded px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
-              Manage Billing Portal
-            </button>
-
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="font-semibold text-blue-900 mb-2">Upgrade Plan</h4>
-              <p className="text-sm text-blue-700 mb-4">
-                Unlock more features and increase your limits
-              </p>
-              <button className="w-full bg-blue-600 text-white rounded px-4 py-2 text-sm font-medium hover:bg-blue-700 transition">
-                Upgrade Now
-              </button>
-            </div>
-          </CardContent>
-        </Card>
+        <SubscriptionCard
+          subscriptionTier={user?.subscriptionTier || "free"}
+          activeSubscription={activeSubscription}
+          stripeCustomerId={stripeCustomer?.stripeCustomerId}
+        />
 
         {/* Bank Connections */}
         <Card className="lg:col-span-3">

@@ -76,15 +76,55 @@ model StripeCustomer {
   userId             String    @unique
   user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   stripeCustomerId   String    @unique
-  subscriptionId     String?
-  currentPlan        String?
-  status             String?
-  renewalDate        DateTime?
+  email              String
+  subscriptions      StripeSubscription[]
+  invoices           StripeInvoice[]
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 
   @@index([userId])
   @@index([stripeCustomerId])
+}
+
+model StripeSubscription {
+  id                 String    @id @default(cuid())
+  stripeCustomerId   String
+  stripeCustomer     StripeCustomer @relation(fields: [stripeCustomerId], references: [id], onDelete: Cascade)
+  subscriptionId     String    @unique
+  priceId            String
+  productId          String
+  tier               String    // "solo", "pro", "team"
+  status             String    // "active", "past_due", "canceled", etc
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd  Boolean   @default(false)
+  canceledAt         DateTime?
+  metadata           String?   @db.Text // JSON string for additional data
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([stripeCustomerId])
+  @@index([status])
+}
+
+model StripeInvoice {
+  id                 String    @id @default(cuid())
+  stripeCustomerId   String
+  stripeCustomer     StripeCustomer @relation(fields: [stripeCustomerId], references: [id], onDelete: Cascade)
+  invoiceId          String    @unique
+  number             String?
+  amount             Int       // Amount in cents
+  currency           String
+  status             String    // "draft", "open", "paid", "void", "uncollectible"
+  paidAt             DateTime?
+  dueDate            DateTime?
+  invoiceUrl         String?   @db.Text
+  pdfUrl             String?   @db.Text
+  metadata           String?   @db.Text // JSON string for additional data
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([stripeCustomerId])
+  @@index([status])
 }
 
 model Transaction {
