@@ -65,7 +65,7 @@ export default async function TransactionsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions.map((t) => (
+                  {transactions.map((t: any) => (
                     <tr
                       key={t.id}
                       className="border-b border-gray-100 hover:bg-gray-50 transition"

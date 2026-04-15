@@ -31,12 +31,12 @@ export default async function DashboardPage() {
   });
 
   const income = transactions
-    .filter((t) => t.type === "income")
-    .reduce((sum, t) => sum + Number(t.amount), 0);
+    .filter((t: any) => t.type === "income")
+    .reduce((sum: number, t: any) => sum + Number(t.amount), 0);
 
   const expenses = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((sum, t) => sum + Number(t.amount), 0);
+    .filter((t: any) => t.type === "expense")
+    .reduce((sum: number, t: any) => sum + Number(t.amount), 0);
 
   const cashBalance = income - expenses;
   const monthlyBurnRate = expenses;
@@ -60,7 +60,7 @@ export default async function DashboardPage() {
     take: 90,
   });
 
-  const chartData = forecasts.map((f) => ({
+  const chartData = forecasts.map((f: any) => ({
     date: new Date(f.date).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
@@ -162,7 +162,7 @@ export default async function DashboardPage() {
           <CardContent>
             {upcomingTransactions.length > 0 ? (
               <div className="space-y-3">
-                {upcomingTransactions.map((t) => (
+                {upcomingTransactions.map((t: any) => (
                   <div
                     key={t.id}
                     className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"

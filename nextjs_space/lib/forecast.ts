@@ -18,7 +18,7 @@ export function calculateSeasonalityFactor(
   const targetMonth = targetDate.getMonth();
   const monthlyTotals = new Map<number, Decimal>();
 
-  historicalData.forEach((tx) => {
+  historicalData.forEach((tx: any) => {
     const month = new Date(tx.date).getMonth();
     const current = monthlyTotals.get(month) || new Decimal(0);
     monthlyTotals.set(month, current.plus(tx.amount));
@@ -27,7 +27,7 @@ export function calculateSeasonalityFactor(
   if (monthlyTotals.size === 0) return 1.0;
 
   const avg = Array.from(monthlyTotals.values())
-    .reduce((a, b) => a.plus(b), new Decimal(0))
+    .reduce((a: any, b: any) => a.plus(b), new Decimal(0))
     .dividedBy(monthlyTotals.size);
 
   const targetMonthTotal = monthlyTotals.get(targetMonth) || new Decimal(0);
@@ -81,9 +81,9 @@ export function detectAnomalies(
     new Decimal(tx.amount).toNumber()
   );
 
-  const mean = values.reduce((a, b) => a + b, 0) / values.length;
+  const mean = values.reduce((a: any, b: any) => a + b, 0) / values.length;
   const variance =
-    values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
+    values.reduce((a: any, b: any) => a + Math.pow(b - mean, 2), 0) / values.length;
   const stdDev = Math.sqrt(variance);
 
   const numValue = new Decimal(value).toNumber();
@@ -118,7 +118,7 @@ export async function generateAdvancedForecast(
     const seasonality = calculateSeasonalityFactor(historicalTx, forecastDate);
     const trend = calculateTrendFactor(historicalTx, forecastDate);
 
-    const baselineSum = historicalTx.reduce((sum, tx) => sum.plus(tx.amount), new Decimal(0));
+    const baselineSum = historicalTx.reduce((sum: any, tx: any) => sum.plus(tx.amount), new Decimal(0));
     const baseline = baselineSum.dividedBy(Math.max(1, historicalTx.length));
 
     const baseForecast = baseline.toNumber();

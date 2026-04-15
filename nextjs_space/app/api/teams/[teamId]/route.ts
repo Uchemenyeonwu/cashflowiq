@@ -22,7 +22,7 @@ export async function GET(
     }
 
     // Verify user is team member
-    const isMember = team.members.some((m) => m.userId === session.user.id);
+    const isMember = team.members.some((m: any) => m.userId === session.user.id);
     if (!isMember && team.ownerId !== session.user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }

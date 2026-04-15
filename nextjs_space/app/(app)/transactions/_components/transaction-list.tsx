@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Trash2, Edit2, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { Transaction } from "@prisma/client";
 import AddTransactionModal from "./add-transaction-modal";
 import EditTransactionModal from "./edit-transaction-modal";
 import { useRouter } from "next/navigation";
@@ -25,7 +24,7 @@ function AddButton() {
   );
 }
 
-function EditButton({ transaction }: { transaction: Transaction }) {
+function EditButton({ transaction }: { transaction: any }) {
   const [open, setOpen] = useState(false);
   return (
     <>

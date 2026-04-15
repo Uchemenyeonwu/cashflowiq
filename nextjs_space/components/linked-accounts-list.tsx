@@ -143,7 +143,7 @@ export function LinkedAccountsList({ onAccountDeleted }: LinkedAccountsListProps
   return (
     <div className="space-y-4">
       <h3 className="font-semibold">Connected Bank Accounts</h3>
-      {accounts.map((account) => (
+      {accounts.map((account: any) => (
         <Card key={account.id}>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">

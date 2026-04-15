@@ -50,7 +50,7 @@ export async function getSupportHistory(
       take: limit,
     });
 
-    return messages.map((m) => {
+    return messages.map((m: any) => {
       const data = m.description ? JSON.parse(m.description) : {};
       return {
         id: m.id,

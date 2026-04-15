@@ -50,7 +50,7 @@ export async function GET() {
 
     const avgAnomalyScore =
       forecasts.length > 0
-        ? forecasts.reduce((sum, f) => sum + (f.anomalyScore ? parseFloat(f.anomalyScore.toString()) : 0), 0) /
+        ? forecasts.reduce((sum: any, f: any) => sum + (f.anomalyScore ? parseFloat(f.anomalyScore.toString()) : 0), 0) /
           forecasts.length
         : 0;
 
@@ -75,7 +75,7 @@ export async function GET() {
 
     return NextResponse.json({
       features: {
-        topCategories: topCategories.map((item) => ({
+        topCategories: topCategories.map((item: any) => ({
           category: item.category,
           count: item._count.id,
         })),

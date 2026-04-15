@@ -69,7 +69,7 @@ export async function deleteUserAndData(userId: string) {
 
     if (!user) throw new Error('User not found');
 
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       await tx.transaction.deleteMany({ where: { userId } });
       await tx.forecast.deleteMany({ where: { userId } });
       await tx.linkedAccount.deleteMany({ where: { userId } });
@@ -108,8 +108,8 @@ export async function createAnonymizedExport(userId: string) {
       transactionsSummary: {
         total: data.transactions.length,
         dateRange: data.transactions.length > 0 ? {
-          earliest: new Date(Math.min(...data.transactions.map((t) => new Date(t.date).getTime()))).toISOString(),
-          latest: new Date(Math.max(...data.transactions.map((t) => new Date(t.date).getTime()))).toISOString(),
+          earliest: new Date(Math.min(...data.transactions.map((t: any) => new Date(t.date).getTime()))).toISOString(),
+          latest: new Date(Math.max(...data.transactions.map((t: any) => new Date(t.date).getTime()))).toISOString(),
         } : null,
       },
     };

@@ -205,7 +205,7 @@ export function ApiStatusCard() {
             <p className="text-sm text-gray-500">No API keys yet. Create one to get started.</p>
           ) : (
             <div className="space-y-3">
-              {apiKeys.map((key) => (
+              {apiKeys.map((key: any) => (
                 <div key={key.id} className="border rounded-lg p-3 flex items-center justify-between">
                   <div className="flex-1">
                     <p className="font-semibold text-sm">{key.name}</p>

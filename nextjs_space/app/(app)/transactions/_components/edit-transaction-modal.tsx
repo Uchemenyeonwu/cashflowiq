@@ -11,10 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Transaction } from "@prisma/client";
 
 interface EditTransactionModalProps {
-  transaction: Transaction;
+  transaction: any;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -136,7 +135,7 @@ export default function EditTransactionModal({
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-3 py-2"
               >
-                {categories.map((cat) => (
+                {categories.map((cat: any) => (
                   <option key={cat} value={cat}>
                     {cat}
                   </option>

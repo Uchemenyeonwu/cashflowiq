@@ -34,7 +34,7 @@ export async function GET() {
     });
 
     const tierCounts = tierBreakdown.reduce(
-      (acc: Record<string, number>, tier) => {
+      (acc: Record<string, number>, tier: any) => {
         acc[tier.subscriptionTier] = tier._count.id;
         return acc;
       },

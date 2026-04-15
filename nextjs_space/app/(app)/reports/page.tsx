@@ -26,18 +26,18 @@ export default async function ReportsPage() {
 
   // Calculate summary stats
   const income = transactions
-    .filter((t) => t.type === "income")
-    .reduce((sum, t) => sum + Number(t.amount), 0);
+    .filter((t: any) => t.type === "income")
+    .reduce((sum: number, t: any) => sum + Number(t.amount), 0);
 
   const expenses = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((sum, t) => sum + Number(t.amount), 0);
+    .filter((t: any) => t.type === "expense")
+    .reduce((sum: number, t: any) => sum + Number(t.amount), 0);
 
   const netCashFlow = income - expenses;
 
   // Category breakdown
   const categoryBreakdown: Record<string, number> = {};
-  transactions.forEach((t) => {
+  transactions.forEach((t: any) => {
     if (!categoryBreakdown[t.category]) {
       categoryBreakdown[t.category] = 0;
     }
@@ -46,7 +46,7 @@ export default async function ReportsPage() {
 
   // Monthly data
   const monthlyData: Record<string, { income: number; expense: number }> = {};
-  transactions.forEach((t) => {
+  transactions.forEach((t: any) => {
     const month = new Date(t.date).toLocaleString("default", {
       year: "numeric",
       month: "short",

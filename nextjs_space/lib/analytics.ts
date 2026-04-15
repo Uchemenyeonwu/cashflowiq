@@ -36,7 +36,7 @@ export async function calculateCohorts(userId: string): Promise<CohortAnalysis[]
 
     // Segment by category
     const categoryMap = new Map<string, typeof transactions>();
-    transactions.forEach((t) => {
+    transactions.forEach((t: any) => {
       const key = t.category || 'uncategorized';
       if (!categoryMap.has(key)) {
         categoryMap.set(key, []);
@@ -48,12 +48,12 @@ export async function calculateCohorts(userId: string): Promise<CohortAnalysis[]
 
     for (const [category, items] of categoryMap) {
       const income = items
-        .filter((t) => t.type === 'income')
-        .reduce((sum, t) => sum + parseFloat(t.amount.toString()), 0);
+        .filter((t: any) => t.type === 'income')
+        .reduce((sum: any, t: any) => sum + parseFloat(t.amount.toString()), 0);
 
       const expenses = items
-        .filter((t) => t.type === 'expense')
-        .reduce((sum, t) => sum + parseFloat(t.amount.toString()), 0);
+        .filter((t: any) => t.type === 'expense')
+        .reduce((sum: any, t: any) => sum + parseFloat(t.amount.toString()), 0);
 
       const netCashFlow = income - expenses;
 
@@ -62,7 +62,7 @@ export async function calculateCohorts(userId: string): Promise<CohortAnalysis[]
       const dailyBurn = expenses / daysOfData;
       const currentBalance = await prisma.user
         .findUnique({ where: { id: userId } })
-        .then((u) => parseFloat(u?.image || '0')); // Placeholder for balance
+        .then((u: any) => parseFloat(u?.image || '0')); // Placeholder for balance
 
       const runway = dailyBurn > 0 ? Math.ceil(currentBalance / dailyBurn) : 999;
 
@@ -111,14 +111,14 @@ export async function calculateForecastMetrics(
     let trend: 'improving' | 'stable' | 'declining' = 'stable';
     let avgConfidence = 0;
 
-    forecasts.forEach((f) => {
+    forecasts.forEach((f: any) => {
       const actualTransactions = transactions.filter(
-        (t) =>
+        (t: any) =>
           new Date(t.date).toDateString() === new Date(f.date).toDateString()
       );
 
       const actual = actualTransactions.reduce(
-        (sum, t) =>
+        (sum: any, t: any) =>
           sum +
           (t.type === 'income' ? 1 : -1) * parseFloat(t.amount.toString()),
         0
@@ -178,7 +178,7 @@ export async function calculateSeasonality(
 
     const monthlyData = new Map<string, typeof transactions>();
 
-    transactions.forEach((t) => {
+    transactions.forEach((t: any) => {
       const date = new Date(t.date);
       const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       if (!monthlyData.has(key)) {
@@ -212,17 +212,17 @@ export async function calculateSeasonality(
         .map(([, data]) => data);
 
       if (relevantMonths.length > 0) {
-        const avgIncome = relevantMonths.reduce((sum, month) => {
+        const avgIncome = relevantMonths.reduce((sum: any, month: any) => {
           const income = month
-            .filter((t) => t.type === 'income')
-            .reduce((s, t) => s + parseFloat(t.amount.toString()), 0);
+            .filter((t: any) => t.type === 'income')
+            .reduce((s: any, t: any) => s + parseFloat(t.amount.toString()), 0);
           return sum + income / month.length;
         }, 0) / relevantMonths.length;
 
-        const avgExpenses = relevantMonths.reduce((sum, month) => {
+        const avgExpenses = relevantMonths.reduce((sum: any, month: any) => {
           const expenses = month
-            .filter((t) => t.type === 'expense')
-            .reduce((s, t) => s + parseFloat(t.amount.toString()), 0);
+            .filter((t: any) => t.type === 'expense')
+            .reduce((s: any, t: any) => s + parseFloat(t.amount.toString()), 0);
           return sum + expenses / month.length;
         }, 0) / relevantMonths.length;
 
@@ -256,7 +256,7 @@ export async function getAnomalies(userId: string, days: number = 30) {
       orderBy: { date: 'desc' },
     });
 
-    return forecasts.map((f) => {
+    return forecasts.map((f: any) => {
       const confidence = f.confidence || 50;
       return {
         date: f.date,

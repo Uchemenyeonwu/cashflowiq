@@ -53,7 +53,7 @@ export async function getUserTeams(userId: string) {
         },
       },
     });
-    return teams.map((tm) => ({ ...tm.team, userRole: tm.role }));
+    return teams.map((tm: any) => ({ ...tm.team, userRole: tm.role }));
   } catch (error) {
     console.error('Error fetching user teams:', error);
     throw error;

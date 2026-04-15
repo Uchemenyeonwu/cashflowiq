@@ -97,12 +97,12 @@ export async function getCachedTransactionSummary(
       });
 
       const income = transactions
-        .filter((t) => t.type === 'income')
-        .reduce((sum, t) => sum + parseFloat(t.amount.toString()), 0);
+        .filter((t: any) => t.type === 'income')
+        .reduce((sum: any, t: any) => sum + parseFloat(t.amount.toString()), 0);
 
       const expenses = transactions
-        .filter((t) => t.type === 'expense')
-        .reduce((sum, t) => sum + parseFloat(t.amount.toString()), 0);
+        .filter((t: any) => t.type === 'expense')
+        .reduce((sum: any, t: any) => sum + parseFloat(t.amount.toString()), 0);
 
       return {
         totalTransactions: transactions.length,

@@ -5,10 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { User } from "@prisma/client";
 
 interface SettingsFormProps {
-  user: User;
+  user: any;
 }
 
 export default function SettingsForm({ user }: SettingsFormProps) {

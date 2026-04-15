@@ -44,7 +44,7 @@ export async function GET() {
     });
 
     const tierUsage: Record<string, { keys: number; requests: number }> = {};
-    apiUsageByTier.forEach((item) => {
+    apiUsageByTier.forEach((item: any) => {
       const tier = item.user?.subscriptionTier || 'free';
       if (!tierUsage[tier]) {
         tierUsage[tier] = { keys: 0, requests: 0 };
@@ -77,7 +77,7 @@ export async function GET() {
         errorRate: totalApiCalls > 0 ? (errorCalls / totalApiCalls) * 100 : 0,
       },
       byTier: tierUsage,
-      topEndpoints: topEndpoints.map((item) => ({
+      topEndpoints: topEndpoints.map((item: any) => ({
         endpoint: item.endpoint,
         count: item._count.id,
       })),

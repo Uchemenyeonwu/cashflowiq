@@ -90,7 +90,7 @@ export async function getTeamSharedDashboards(teamId: string) {
       orderBy: { createdAt: 'desc' },
     });
 
-    return dashboards.map((d) => ({
+    return dashboards.map((d: any) => ({
       ...d,
       widgets: d.widgets ? JSON.parse(d.widgets) : [],
       layout: d.layout ? JSON.parse(d.layout) : null,

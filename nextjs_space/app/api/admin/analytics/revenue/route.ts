@@ -37,7 +37,7 @@ export async function GET() {
     });
 
     const monthlyRevenue: Record<string, number> = {};
-    paidInvoices.forEach((invoice) => {
+    paidInvoices.forEach((invoice: any) => {
       const month = invoice.createdAt.toISOString().substring(0, 7); // YYYY-MM
       monthlyRevenue[month] = (monthlyRevenue[month] || 0) + invoice.amount / 100;
     });
@@ -70,7 +70,7 @@ export async function GET() {
     let totalMRR = 0;
     const mrrByTier: Record<string, number> = {};
 
-    mrrBreakdown.forEach((item) => {
+    mrrBreakdown.forEach((item: any) => {
       const tierMRR = (tierPrices[item.tier] || 0) * item._count.id;
       mrrByTier[item.tier] = tierMRR;
       totalMRR += tierMRR;
@@ -84,7 +84,7 @@ export async function GET() {
         .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
       churnRate: activeSubscriptions > 0 ? (canceledThisMonth / activeSubscriptions) * 100 : 0,
       activeSubscriptions,
-      subscriptionsByTier: subscriptionsByTier.map((item) => ({
+      subscriptionsByTier: subscriptionsByTier.map((item: any) => ({
         tier: item.tier,
         status: item.status,
         count: item._count.id,

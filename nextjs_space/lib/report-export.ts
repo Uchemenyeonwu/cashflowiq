@@ -94,7 +94,7 @@ export async function generateCashFlowReportData(
 
     const dailyData = new Map<string, { income: Decimal; expense: Decimal }>();
 
-    transactions.forEach((tx) => {
+    transactions.forEach((tx: any) => {
       const dateKey = tx.date.toISOString().slice(0, 10);
       const current = dailyData.get(dateKey) || { income: new Decimal(0), expense: new Decimal(0) };
 
@@ -148,7 +148,7 @@ export async function generateCategoryBreakdownData(
 
     const categoryData = new Map<string, Decimal>();
 
-    transactions.forEach((tx) => {
+    transactions.forEach((tx: any) => {
       const current = categoryData.get(tx.category) || new Decimal(0);
       categoryData.set(tx.category, current.plus(tx.amount));
     });
@@ -159,8 +159,8 @@ export async function generateCategoryBreakdownData(
       percentage: 0,
     }));
 
-    const total = reportData.reduce((sum, item) => sum + item.amount, 0);
-    reportData.forEach((item) => {
+    const total = reportData.reduce((sum: any, item: any) => sum + item.amount, 0);
+    reportData.forEach((item: any) => {
       item.percentage = total > 0 ? Math.round((item.amount / total) * 100) : 0;
     });
 
@@ -190,7 +190,7 @@ export async function generateMonthlyComparisonData(
 
     const monthlyData = new Map<string, { income: Decimal; expense: Decimal }>();
 
-    transactions.forEach((tx) => {
+    transactions.forEach((tx: any) => {
       const monthKey = tx.date.toISOString().slice(0, 7);
       const current = monthlyData.get(monthKey) || { income: new Decimal(0), expense: new Decimal(0) };
 

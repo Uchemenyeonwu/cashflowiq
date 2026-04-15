@@ -350,7 +350,7 @@ export default function AdminDashboardClient() {
                 {users.length === 0 ? (
                   <p className="text-gray-500">No users found</p>
                 ) : (
-                  users.map((user) => (
+                  users.map((user: any) => (
                     <div key={user.id} className="flex items-center justify-between p-3 border rounded hover:bg-gray-50">
                       <div className="flex-1">
                         <p className="font-medium">{user.email}</p>

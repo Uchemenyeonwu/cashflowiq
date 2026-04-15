@@ -128,7 +128,7 @@ export default function PricingPage() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
-          {TIERS.map((tier) => (
+          {TIERS.map((tier: any) => (
             <Card
               key={tier.name}
               className={`relative flex flex-col ${
@@ -175,7 +175,7 @@ export default function PricingPage() {
                 </Button>
 
                 <div className="space-y-4">
-                  {tier.features.map((feature, idx) => (
+                  {tier.features.map((feature: any, idx: any) => (
                     <div key={idx} className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                       <span className="text-gray-700 text-sm">{feature}</span>

@@ -140,7 +140,7 @@ export default function AddTransactionModal({
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-3 py-2"
               >
-                {categories.map((cat) => (
+                {categories.map((cat: any) => (
                   <option key={cat} value={cat}>
                     {cat}
                   </option>

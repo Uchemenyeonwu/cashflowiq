@@ -11,7 +11,7 @@ try {
     /prisma\.\w+\.deleteMany\(/,
   ];
 
-  const violations = forbiddenPatterns.filter((pattern) => pattern.test(content));
+  const violations = forbiddenPatterns.filter((pattern: any) => pattern.test(content));
 
   if (violations.length > 0) {
     console.error("Seed aborted: seed.ts contains prisma.delete or prisma.deleteMany calls.");
