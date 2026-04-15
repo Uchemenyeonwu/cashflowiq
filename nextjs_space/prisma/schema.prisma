@@ -70,10 +70,27 @@ model User {
   apiKeys              ApiKey[]
   webhooks             Webhook[]
   reportExports        ReportExport[]
+  adminRole            AdminRole?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
+  lastLoginAt          DateTime?
 
   @@index([email])
+}
+
+model AdminRole {
+  id                 String    @id @default(cuid())
+  userId             String    @unique
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role               String    @default("admin") // "admin", "super_admin"
+  permissions        String[]  @default(["view_analytics", "manage_users", "export_data"]) // granular permissions
+  grantedBy          String?   // userId of admin who granted this role
+  grantedAt          DateTime  @default(now())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([role])
 }
 
 model StripeCustomer {
@@ -382,4 +399,56 @@ model SharedDashboard {
 
   @@index([teamId])
   @@index([shareToken])
+}
+
+// ===== ADMIN DASHBOARD: Analytics & Monitoring =====
+
+model ApiUsageLog {
+  id                 String    @id @default(cuid())
+  userId             String    // optional, if by authenticated user
+  tier               String    // "free", "solo", "pro", "team"
+  endpoint           String
+  method             String    // GET, POST, PUT, DELETE
+  statusCode         Int
+  responseTimeMs     Int?
+  ipAddress          String?
+  createdAt          DateTime  @default(now())
+
+  @@index([userId])
+  @@index([tier])
+  @@index([createdAt])
+}
+
+model SystemHealthMetric {
+  id                 String    @id @default(cuid())
+  timestamp          DateTime  @default(now())
+  cpuUsage           Decimal?  @db.Decimal(5, 2) // percentage
+  memoryUsage        Decimal?  @db.Decimal(5, 2) // percentage
+  dbConnections      Int?
+  avgResponseTimeMs  Int?
+  errorCount         Int       @default(0)
+  requestCount       Int       @default(0)
+  status             String    @default("healthy") // "healthy", "degraded", "down"
+  notes              String?   @db.Text
+
+  @@index([timestamp])
+  @@index([status])
+}
+
+model PlaidSyncMetric {
+  id                 String    @id @default(cuid())
+  linkedAccountId    String?
+  userId             String?
+  syncStatus         String    // "success", "failed"
+  totalTransactions  Int       @default(0)
+  newTransactions    Int       @default(0)
+  updatedTransactions Int      @default(0)
+  errorMessage       String?   @db.Text
+  syncDurationMs     Int?
+  createdAt          DateTime  @default(now())
+
+  @@index([linkedAccountId])
+  @@index([userId])
+  @@index([syncStatus])
+  @@index([createdAt])
 }
