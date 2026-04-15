@@ -4,17 +4,8 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-function getPrismaClient(): PrismaClient {
-  if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = new PrismaClient();
-  }
-  return globalForPrisma.prisma;
-}
+export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-// Use a proxy to lazily initialize PrismaClient only when actually accessed
-export const prisma = new Proxy({} as PrismaClient, {
-  get(_target, prop) {
-    const client = getPrismaClient();
-    return (client as any)[prop];
-  },
-});
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}
