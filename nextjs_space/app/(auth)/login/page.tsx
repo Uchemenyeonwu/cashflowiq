@@ -7,10 +7,12 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Chrome } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -21,6 +23,17 @@ export default function LoginPage() {
       ...credentials,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    try {
+      await signIn("google", { redirect: true, callbackUrl: "/dashboard" });
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      toast.error("Failed to sign in with Google");
+      setGoogleLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,6 +109,27 @@ export default function LoginPage() {
           {loading ? "Signing in..." : "Sign In"}
         </Button>
       </form>
+
+      <div className="mt-6">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+          </div>
+        </div>
+
+        <Button
+          type="button"
+          onClick={handleGoogleSignIn}
+          disabled={googleLoading}
+          className="w-full mt-4 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+        >
+          <Chrome className="w-4 h-4 mr-2" />
+          {googleLoading ? "Signing in..." : "Sign in with Google"}
+        </Button>
+      </div>
 
       <p className="text-center text-sm text-gray-600 mt-6">
         Don't have an account?{" "}
