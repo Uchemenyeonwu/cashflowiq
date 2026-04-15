@@ -73,11 +73,11 @@ export default async function SettingsPage() {
               <p className="text-sm text-gray-600 mb-4">
                 Connect your bank account to automatically sync transactions and get real-time cash flow insights.
               </p>
-              <ConnectBank onSuccess={() => window.location.reload()} />
+              <ConnectBank />
             </div>
 
             <div className="border-t pt-6">
-              <LinkedAccountsList onAccountDeleted={() => window.location.reload()} />
+              <LinkedAccountsList />
             </div>
           </CardContent>
         </Card>

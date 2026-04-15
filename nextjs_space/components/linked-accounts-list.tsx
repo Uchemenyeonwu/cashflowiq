@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import {
   Card,
   CardContent,
@@ -32,6 +33,7 @@ interface LinkedAccountsListProps {
 
 export function LinkedAccountsList({ onAccountDeleted }: LinkedAccountsListProps) {
   const { data: session } = useSession();
+  const router = useRouter();
   const { toast } = useToast();
   const [accounts, setAccounts] = useState<LinkedAccount[]>([]);
   const [loading, setLoading] = useState(true);
@@ -107,6 +109,7 @@ export function LinkedAccountsList({ onAccountDeleted }: LinkedAccountsListProps
       });
       fetchAccounts();
       onAccountDeleted?.();
+      router.refresh();
     } catch (error: any) {
       toast({
         title: 'Error',

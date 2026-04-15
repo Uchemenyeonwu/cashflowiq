@@ -79,8 +79,4 @@ function DeleteButton({ transactionId }: { transactionId: string }) {
   );
 }
 
-export default {
-  AddButton,
-  EditButton,
-  DeleteButton,
-};
+export { AddButton, EditButton, DeleteButton };

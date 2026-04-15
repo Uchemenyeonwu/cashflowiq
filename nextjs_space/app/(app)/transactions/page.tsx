@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import TransactionList from "./_components/transaction-list";
+import { AddButton, EditButton, DeleteButton } from "./_components/transaction-list";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +31,7 @@ export default async function TransactionsPage() {
             Manage your income and expenses
           </p>
         </div>
-        <TransactionList.AddButton />
+        <AddButton />
       </div>
 
       <Card>
@@ -99,8 +99,8 @@ export default async function TransactionsPage() {
                         {Number(t.amount).toFixed(2)}
                       </td>
                       <td className="py-3 px-4 text-right">
-                        <TransactionList.EditButton transaction={t} />
-                        <TransactionList.DeleteButton transactionId={t.id} />
+                        <EditButton transaction={t} />
+                        <DeleteButton transactionId={t.id} />
                       </td>
                     </tr>
                   ))}
@@ -110,7 +110,7 @@ export default async function TransactionsPage() {
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-600">No transactions yet.</p>
-              <TransactionList.AddButton />
+              <AddButton />
             </div>
           )}
         </CardContent>

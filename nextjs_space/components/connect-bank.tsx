@@ -3,6 +3,7 @@
 import { useCallback, useState } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
@@ -12,6 +13,7 @@ interface ConnectBankProps {
 }
 
 export function ConnectBank({ onSuccess }: ConnectBankProps) {
+  const router = useRouter();
   const { data: session } = useSession();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -68,6 +70,7 @@ export function ConnectBank({ onSuccess }: ConnectBankProps) {
         });
         setLinkToken(null);
         onSuccess?.();
+        router.refresh();
       } catch (error: any) {
         console.error('Error exchanging token:', error);
         toast({
@@ -77,7 +80,7 @@ export function ConnectBank({ onSuccess }: ConnectBankProps) {
         });
       }
     },
-    [toast, onSuccess]
+    [toast, onSuccess, router]
   );
 
   const { open, ready } = usePlaidLink({

@@ -40,6 +40,22 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script src="https://apps.abacus.ai/chatllm/appllm-lib.js"></script>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            var origError = console.error;
+            console.error = function() {
+              var args = Array.prototype.slice.call(arguments);
+              var msg = args.join(' ');
+              if (msg.indexOf('cdnfonts.com') !== -1 || msg.indexOf('ERR_BLOCKED_BY_RESPONSE') !== -1) return;
+              origError.apply(console, arguments);
+            };
+            window.addEventListener('error', function(e) {
+              if (e.filename && (e.filename.indexOf('cdnfonts.com') !== -1 || e.filename.indexOf('appllm-lib') !== -1)) {
+                e.preventDefault();
+              }
+            });
+          })();
+        `}} />
       </head>
       <body
         className={`${dmSans.variable} ${plusJakarta.variable} ${jetbrainsMono.variable} font-sans`}
