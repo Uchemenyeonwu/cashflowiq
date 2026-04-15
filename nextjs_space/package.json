@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma db push --skip-generate --accept-data-loss && next build",
+    "build": "prisma generate && prisma db push --skip-generate --accept-data-loss && prisma db seed && next build",
     "start": "next start",
     "lint": "next lint",
     "worker": "tsx scripts/worker.ts",
@@ -11,7 +11,7 @@
     "seed": "prisma db seed"
   },
   "prisma": {
-    "seed": "tsx --require dotenv/config scripts/safe-seed.ts"
+    "seed": "tsx prisma/seed.ts"
   },
   "devDependencies": {
     "@next/swc-wasm-nodejs": "13.5.1",
