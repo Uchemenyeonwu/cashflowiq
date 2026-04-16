@@ -7,7 +7,6 @@ const nextConfig = {
   productionBrowserSourceMaps: false,
   experimental: {
     outputFileTracingRoot: path.join(__dirname, '../'),
-    serverComponentsExternalPackages: ['@prisma/client', 'prisma'],
   },
   eslint: {
     ignoreDuringBuilds: true,
