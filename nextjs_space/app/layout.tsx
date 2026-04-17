@@ -76,10 +76,13 @@ export default function RootLayout({
                 if (a[i] && a[i].tagName === 'LINK' && a[i].href && a[i].href.indexOf(B) !== -1) return;
               } return ap.apply(this, a);
             }; }
-            // 6. Suppress console errors
-            var ce = console.error;
+            // 6. Suppress console errors and warnings
+            var ce = console.error; var cw = console.warn;
             console.error = function() { var m = Array.prototype.join.call(arguments, ' ');
-              if (m.indexOf(B) !== -1 || m.indexOf('ERR_BLOCKED_BY_RESPONSE') !== -1) return; ce.apply(console, arguments);
+              if (m.indexOf(B) !== -1 || m.indexOf('ERR_BLOCKED_BY_RESPONSE') !== -1 || m.indexOf('NotSameOrigin') !== -1) return; ce.apply(console, arguments);
+            };
+            console.warn = function() { var m = Array.prototype.join.call(arguments, ' ');
+              if (m.indexOf(B) !== -1) return; cw.apply(console, arguments);
             };
             // 7. Capture resource errors
             window.addEventListener('error', function(e) {
