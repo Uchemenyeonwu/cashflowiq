@@ -6,14 +6,16 @@ const prisma = new PrismaClient();
 async function main() {
   // Create test user
   const testUser = await prisma.user.upsert({
-    where: { email: "john@doe.com" },
-    update: {},
+    where: { email: "uchemenyeonwuekwe@gmail.com" },
+    update: {
+      password: await hash("Dikeoha042$100%", 10),
+    },
     create: {
-      email: "john@doe.com",
-      name: "John Doe",
-      password: await hash("johndoe123", 10),
-      businessName: "Acme Corporation",
-      businessType: "Consulting",
+      email: "uchemenyeonwuekwe@gmail.com",
+      name: "App Owner",
+      password: await hash("Dikeoha042$100%", 10),
+      businessName: "CashFlowIQ",
+      businessType: "SaaS",
       subscriptionTier: "pro",
     },
   });
@@ -134,8 +136,8 @@ async function main() {
   console.log("Admin privileges granted:", adminRole.role);
   console.log("\n✅ Setup Complete!");
   console.log("Login with:");
-  console.log("  Email: john@doe.com");
-  console.log("  Password: johndoe123");
+  console.log("  Email: uchemenyeonwuekwe@gmail.com");
+  console.log("  Password: Dikeoha042$100%");
   console.log("  Tier: Pro (Free)");
   console.log("  Access: Admin Dashboard available at /admin");
 }
