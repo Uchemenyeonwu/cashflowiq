@@ -35,7 +35,7 @@ export function ConnectBank({ onSuccess }: ConnectBankProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: session.user.email,
+          userId: (session.user as any).id || session.user.email?.replace(/[^a-zA-Z0-9]/g, '_') || 'unknown',
           userName: session.user.name || 'User',
           userEmail: session.user.email,
         }),
