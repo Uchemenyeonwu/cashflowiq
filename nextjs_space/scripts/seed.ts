@@ -112,6 +112,32 @@ async function main() {
   }
 
   console.log("Sample forecasts created");
+
+  // Grant admin privileges to test user
+  const adminRole = await prisma.adminRole.upsert({
+    where: { userId: testUser.id },
+    update: {},
+    create: {
+      userId: testUser.id,
+      role: "super_admin",
+      permissions: [
+        "view_analytics",
+        "manage_users",
+        "export_data",
+        "manage_billing",
+        "system_settings",
+      ],
+      grantedBy: testUser.id, // Self-granted for initial setup
+    },
+  });
+
+  console.log("Admin privileges granted:", adminRole.role);
+  console.log("\n✅ Setup Complete!");
+  console.log("Login with:");
+  console.log("  Email: john@doe.com");
+  console.log("  Password: johndoe123");
+  console.log("  Tier: Pro (Free)");
+  console.log("  Access: Admin Dashboard available at /admin");
 }
 
 main()
