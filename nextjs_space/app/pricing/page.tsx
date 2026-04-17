@@ -14,7 +14,7 @@ const TIERS = [
     price: 19,
     description: 'For freelancers and solo operators',
     cta: 'Start Free Trial',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_SOLO || '_prod_ULoDQzeKC2NXaf',
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_SOLO || 'price_1TN6bMC2jBiElmy4kfbm62Pw',
     tier: 'solo',
     features: [
       'Up to 5 bank connections',
@@ -30,7 +30,7 @@ const TIERS = [
     price: 59,
     description: 'For growing small businesses',
     cta: 'Start Free Trial',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || '_prod_ULoEY7Kwomw9Ie',
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || 'price_1TN6cHC2jBiElmy4PTmfOJ7F',
     tier: 'pro',
     popular: true,
     features: [
@@ -50,7 +50,7 @@ const TIERS = [
     price: 149,
     description: 'For teams and departments',
     cta: 'Start Free Trial',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_TEAM || '_prod_ULoFdBSPf5kY52',
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_TEAM || 'price_1TN6dAC2jBiElmy4xxPHyvnH',
     tier: 'team',
     features: [
       'Unlimited everything',
