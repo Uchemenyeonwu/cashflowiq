@@ -43,7 +43,7 @@ export function ConnectBank({ onSuccess }: ConnectBankProps) {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Failed to fetch link token');
+        throw new Error(errorData.error || `Failed to fetch link token (${response.status})`);
       }
 
       const data = await response.json();
