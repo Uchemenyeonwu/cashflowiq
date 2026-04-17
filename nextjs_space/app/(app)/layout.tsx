@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LogOut, BarChart3, TrendingUp, Settings, Home, LineChart, HelpCircle, Gauge } from "lucide-react";
+import { LogOut, BarChart3, TrendingUp, Settings, Home, LineChart, HelpCircle, Gauge, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LogoutButton from "./_components/logout-button";
 import { SageFloatingWidget } from "@/components/sage-floating-widget";
@@ -69,6 +69,15 @@ export default async function AppLayout({
               Analytics
             </Button>
           </Link>
+          <a href="/GETTING_STARTED.md" target="_blank" rel="noopener noreferrer">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-green-700 hover:bg-green-50"
+            >
+              <BookOpen className="w-5 h-5 mr-3" />
+              Getting Started
+            </Button>
+          </a>
           <Link href="/support">
             <Button
               variant="ghost"

@@ -36,9 +36,9 @@ export function SageFloatingWidget({ enabled = true }: SageWidgetProps) {
     }
   }, [session?.user?.id, status]);
 
-  // Load Sage widget SDK if user has access (Pro or Team tier)
+  // Load Sage widget SDK if user is authenticated (available to all tiers)
   useEffect(() => {
-    const hasAccess = userTier && ['pro', 'team'].includes(userTier);
+    const hasAccess = userTier && ['free', 'pro', 'team'].includes(userTier);
     const shouldShow = enabled && mounted && status === 'authenticated' && hasAccess;
 
     if (shouldShow) {

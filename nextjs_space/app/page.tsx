@@ -226,11 +226,18 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Master Your Cash Flow?</h2>
           <p className="text-lg mb-8 opacity-90">Join hundreds of SMBs using CashFlowIQ</p>
-          <Link href="/signup">
-            <Button size="lg" variant="secondary">
-              Get Started Free <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/signup">
+              <Button size="lg" variant="secondary">
+                Get Started Free <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+            <a href="/GETTING_STARTED.md" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" variant="outline" className="bg-white/20 text-white border-white hover:bg-white/30">
+                📖 Getting Started Guide
+              </Button>
+            </a>
+          </div>
         </div>
       </section>
 
